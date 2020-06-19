@@ -12,6 +12,7 @@ import com.github.abigail830.ecommerce.ordercontext.domain.order.model.OrderItem
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class OrderApplService {
     @Autowired
     OrderPaymentService orderPaymentService;
 
+    @Transactional
     public String createOrder(CreateOrderRequest createOrderRequest) {
         List<OrderItem> items = createOrderRequest.toOrderItems();
         Order order = orderFactory.create(items, createOrderRequest.toAddress());
@@ -36,6 +38,7 @@ public class OrderApplService {
         return order.getId();
     }
 
+    @Transactional
     public void changeProductCount(String id, String productId, Integer count) {
         Order order = orderRepository.byId(id)
                 .orElseThrow(() -> new OrderNotFoundException(id));
@@ -43,6 +46,7 @@ public class OrderApplService {
         orderRepository.save(order);
     }
 
+    @Transactional
     public void pay(String id, PayOrderRequest payOrderRequest) {
         Order order = orderRepository.byId(id)
                 .orElseThrow(() -> new OrderNotFoundException(id));
@@ -50,10 +54,11 @@ public class OrderApplService {
         orderRepository.save(order);
     }
 
-    public void changeAddressDetail(String id, ChangeAddressDetailRequest changeAddressDetailRequest) {
+    @Transactional
+    public void changeAddress(String id, ChangeAddressDetailRequest changeAddressDetailRequest) {
         Order order = orderRepository.byId(id)
                 .orElseThrow(() -> new OrderNotFoundException(id));
-        order.changeAddressDetail(changeAddressDetailRequest.toAddress());
+        order.changeAddress(changeAddressDetailRequest.toAddress());
         orderRepository.save(order);
     }
 

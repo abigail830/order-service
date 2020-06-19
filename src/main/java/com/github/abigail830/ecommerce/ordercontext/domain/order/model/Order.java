@@ -81,7 +81,7 @@ public class Order {
 
     }
 
-    public void changeAddressDetail(Address address) {
+    public void changeAddress(Address address) {
         if (this.status == PAID) {
             throw new OrderCannotBeModifiedException(this.id);
         }

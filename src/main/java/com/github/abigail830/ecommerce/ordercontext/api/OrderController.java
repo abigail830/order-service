@@ -52,10 +52,10 @@ public class OrderController {
         orderApplService.pay(id, payOrderRequest);
     }
 
-    @PostMapping("/{id}/address/detail")
+    @PostMapping("/{id}/address")
     public void changeAddressDetail(@PathVariable(name = "id") String id,
                                     @RequestBody @Valid ChangeAddressDetailRequest changeAddressDetailRequest) {
-        orderApplService.changeAddressDetail(id, changeAddressDetailRequest);
+        orderApplService.changeAddress(id, changeAddressDetailRequest);
     }
 
 //    @GetMapping("/{id}")

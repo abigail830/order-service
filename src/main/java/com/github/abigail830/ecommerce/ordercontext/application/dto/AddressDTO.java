@@ -1,0 +1,25 @@
+package com.github.abigail830.ecommerce.ordercontext.application.dto;
+
+import com.github.abigail830.ecommerce.ordercontext.domain.order.model.Address;
+
+public class AddressDTO {
+
+    private String province;
+    private String city;
+    private String detail;
+
+    private AddressDTO(String province, String city, String detail) {
+        this.province = province;
+        this.city = city;
+        this.detail = detail;
+    }
+
+    public static AddressDTO of(String province, String city, String detail) {
+        return new AddressDTO(province, city, detail);
+    }
+
+    public Address toAddress() {
+        return Address.of(province, city, detail);
+    }
+
+}

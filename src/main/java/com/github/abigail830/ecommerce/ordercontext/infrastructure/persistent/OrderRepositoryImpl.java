@@ -1,4 +1,4 @@
-package com.github.abigail830.ecommerce.ordercontext.infrastructure;
+package com.github.abigail830.ecommerce.ordercontext.infrastructure.persistent;
 
 import com.github.abigail830.ecommerce.ordercontext.domain.order.OrderRepository;
 import com.github.abigail830.ecommerce.ordercontext.domain.order.model.Address;

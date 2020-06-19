@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 @Value
 public class CreateOrderRequest {
+
     @Valid
     @NotEmpty(message = "订单项不能为空")
     private List<OrderItemDTO> items;
@@ -19,14 +20,13 @@ public class CreateOrderRequest {
     @NotNull(message = "订单地址不能为空")
     private AddressDTO addressDTO;
 
-    public List<OrderItem> getOrderItems() {
-        return items.stream()
-                .map(OrderItemDTO::toOrderItem)
-                .collect(Collectors.toList());
+    public List<OrderItem> toOrderItems() {
+        return items.stream().map(OrderItemDTO::toOrderItem).collect(Collectors.toList());
     }
 
-    public Address getAddress() {
+    public Address toAddress() {
         return addressDTO.toAddress();
     }
+
 
 }

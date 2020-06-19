@@ -1,7 +1,9 @@
 package com.github.abigail830.ecommerce.ordercontext.application.dto;
 
 import com.github.abigail830.ecommerce.ordercontext.domain.order.model.Address;
+import lombok.Value;
 
+@Value
 public class AddressDTO {
 
     private String province;

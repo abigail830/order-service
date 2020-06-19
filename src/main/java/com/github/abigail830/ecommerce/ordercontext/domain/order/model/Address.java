@@ -2,10 +2,12 @@ package com.github.abigail830.ecommerce.ordercontext.domain.order.model;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.Objects;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@ToString
 public class Address {
 
     private String province;

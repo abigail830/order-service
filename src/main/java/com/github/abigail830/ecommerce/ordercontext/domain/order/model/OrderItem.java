@@ -1,23 +1,29 @@
 package com.github.abigail830.ecommerce.ordercontext.domain.order.model;
 
-import lombok.Builder;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 
 @Getter
-@Builder
+@ToString
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OrderItem {
     private String productId;
     private int count;
     private BigDecimal itemPrice;
 
+    public OrderItem(String productId, int count, BigDecimal itemPrice) {
+        this.productId = productId;
+        this.count = count;
+        this.itemPrice = itemPrice;
+    }
+
+
     public static OrderItem create(String productId, int count, BigDecimal itemPrice) {
-        return OrderItem.builder()
-                .productId(productId)
-                .count(count)
-                .itemPrice(itemPrice)
-                .build();
+        return new OrderItem(productId, count, itemPrice);
     }
 
     BigDecimal totalPrice() {

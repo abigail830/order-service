@@ -1,6 +1,6 @@
 package com.github.abigail830.ecommerce.ordercontext.application;
 
-import com.github.abigail830.ecommerce.ordercontext.application.dto.ChangeOrderItemCountRequest;
+import com.github.abigail830.ecommerce.ordercontext.application.dto.ChangeAddressDetailRequest;
 import com.github.abigail830.ecommerce.ordercontext.application.dto.CreateOrderRequest;
 import com.github.abigail830.ecommerce.ordercontext.application.dto.PayOrderRequest;
 import com.github.abigail830.ecommerce.ordercontext.domain.order.OrderPaymentService;
@@ -29,18 +29,17 @@ public class OrderApplService {
     OrderPaymentService orderPaymentService;
 
     public String createOrder(CreateOrderRequest createOrderRequest) {
-        List<OrderItem> items = createOrderRequest.getOrderItems();
-        Order order = orderFactory.create(items, createOrderRequest.getAddress());
+        List<OrderItem> items = createOrderRequest.toOrderItems();
+        Order order = orderFactory.create(items, createOrderRequest.toAddress());
         orderRepository.save(order);
         log.info("Created order[{}].", order.getId());
         return order.getId();
     }
 
-    public void changeOrderItemCount(String id,
-                                     ChangeOrderItemCountRequest changeOrderItemCountRequest) {
+    public void changeProductCount(String id, String productId, Integer count) {
         Order order = orderRepository.byId(id)
                 .orElseThrow(() -> new OrderNotFoundException(id));
-        order.changeOrderItemCount(changeOrderItemCountRequest.getOrderItemId(), changeOrderItemCountRequest.getCount());
+        order.changeProductCount(productId, count);
         orderRepository.save(order);
     }
 
@@ -51,10 +50,18 @@ public class OrderApplService {
         orderRepository.save(order);
     }
 
-    public void changeAddressDetail(String id, String detail) {
+    public void changeAddressDetail(String id, ChangeAddressDetailRequest changeAddressDetailRequest) {
         Order order = orderRepository.byId(id)
                 .orElseThrow(() -> new OrderNotFoundException(id));
-        order.changeAddressDetail(detail);
+        order.changeAddressDetail(changeAddressDetailRequest.toAddress());
         orderRepository.save(order);
+    }
+
+    public Order getOrderById(String id) {
+        return orderRepository.byId(id).orElseThrow(() -> new OrderNotFoundException(id));
+    }
+
+    public List<OrderItem> getOrderItemsByOrderId(String id) {
+        return orderRepository.itemsByOrderId(id);
     }
 }

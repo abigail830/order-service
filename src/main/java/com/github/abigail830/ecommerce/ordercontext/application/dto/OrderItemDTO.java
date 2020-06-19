@@ -20,6 +20,10 @@ public class OrderItemDTO {
     @NotNull(message = "产品单价不能为空")
     private BigDecimal itemPrice;
 
+    public static OrderItemDTO of(OrderItem orderItem) {
+        return new OrderItemDTO(orderItem.getProductId(), orderItem.getCount(), orderItem.getItemPrice());
+    }
+
     public OrderItem toOrderItem() {
         return OrderItem.create(productId, count, itemPrice);
     }

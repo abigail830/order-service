@@ -20,6 +20,10 @@ public class AddressDTO {
         return new AddressDTO(province, city, detail);
     }
 
+    public static AddressDTO of(Address address) {
+        return new AddressDTO(address.getProvince(), address.getCity(), address.getDetail());
+    }
+
     public Address toAddress() {
         return Address.of(province, city, detail);
     }

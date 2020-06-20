@@ -7,9 +7,7 @@ import com.github.abigail830.ecommerce.ordercontext.domain.order.model.OrderItem
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
@@ -24,13 +22,9 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    private RowMapper<Order> rowMapper = new BeanPropertyRowMapper<>(Order.class);
-
-    private RowMapper<OrderItem> orderItemRowMapper = new BeanPropertyRowMapper<>(OrderItem.class);
-
     @Override
     public void save(Order order) {
-        String insertSql = "INSERT INTO ORDER_TBL (ID, STATUS, TOTAL_PRICE, CREATED_AT, PROVINCE, CITY, DETAIL) " +
+        final String insertSql = "INSERT INTO ORDER_TBL (ID, STATUS, TOTAL_PRICE, CREATED_AT, PROVINCE, CITY, DETAIL) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?) " +
                 "ON DUPLICATE KEY UPDATE STATUS=?, TOTAL_PRICE=?, PROVINCE=?, CITY=?, DETAIL=?";
         jdbcTemplate.update(insertSql,
@@ -39,7 +33,7 @@ public class OrderRepositoryImpl implements OrderRepository {
                 order.getStatus().name(), order.getTotalPrice(), order.getAddress().getProvince(),
                 order.getAddress().getCity(), order.getAddress().getDetail());
 
-        String insertItemSql = "INSERT INTO ORDER_ITEM_TBL (ORDER_ID, PRODUCT_ID, COUNT, PRICE) " +
+        final String insertItemSql = "INSERT INTO ORDER_ITEM_TBL (ORDER_ID, PRODUCT_ID, COUNT, PRICE) " +
                 "VALUES (?,?,?,?) " +
                 "ON DUPLICATE KEY UPDATE COUNT=?, PRICE=?";
         jdbcTemplate.batchUpdate(insertItemSql, new BatchPreparedStatementSetter() {
@@ -62,7 +56,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public Optional<Order> byId(String id) {
-        String selectItemByIdSql = "SELECT * FROM ORDER_ITEM_TBL WHERE ORDER_ID = ?";
+        final String selectItemByIdSql = "SELECT * FROM ORDER_ITEM_TBL WHERE ORDER_ID = ?";
         final List<OrderItem> orderItems = jdbcTemplate.query(selectItemByIdSql, ((resultSet, i) -> OrderItem.create(
                 resultSet.getString("PRODUCT_ID"),
                 resultSet.getInt("COUNT"),
@@ -84,11 +78,24 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public List<OrderItem> itemsByOrderId(String id) {
-        String selectItemByIdSql = "SELECT * FROM ORDER_ITEM_TBL WHERE ORDER_ID = ?";
+        final String selectItemByIdSql = "SELECT * FROM ORDER_ITEM_TBL WHERE ORDER_ID = ?";
         return jdbcTemplate.query(selectItemByIdSql, ((resultSet, i) -> OrderItem.create(
                 resultSet.getString("PRODUCT_ID"),
                 resultSet.getInt("COUNT"),
                 resultSet.getBigDecimal("PRICE"))), id);
+    }
+
+    @Override
+    public List<Order> listOrdersWithPaging(int pageIndex, int pageSize) {
+        String selectItemByIdSql = "SELECT * FROM ORDER_TBL LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(selectItemByIdSql, ((resultSet, i) -> Order.restoreSummary(
+                resultSet.getString("ID"),
+                resultSet.getBigDecimal("TOTAL_PRICE"),
+                resultSet.getString("STATUS"),
+                Address.of(resultSet.getString("PROVINCE"),
+                        resultSet.getString("CITY"),
+                        resultSet.getString("DETAIL")),
+                resultSet.getTimestamp("CREATED_AT"))), pageSize, pageIndex - 1);
     }
 
 

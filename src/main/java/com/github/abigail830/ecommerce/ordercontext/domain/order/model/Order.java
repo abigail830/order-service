@@ -50,6 +50,11 @@ public class Order {
         return new Order(id, items, totalPrice, OrderStatus.valueOf(status), address, createAt.toInstant());
     }
 
+    public static Order restoreSummary(String id, BigDecimal totalPrice, String status,
+                                       Address address, Timestamp createAt) {
+        return new Order(id, null, totalPrice, OrderStatus.valueOf(status), address, createAt.toInstant());
+    }
+
     private static BigDecimal calculateTotalPrice(List<OrderItem> items) {
         return items.stream()
                 .map(OrderItem::totalPrice)

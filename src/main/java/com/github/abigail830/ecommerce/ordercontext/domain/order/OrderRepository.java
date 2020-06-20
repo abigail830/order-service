@@ -13,5 +13,8 @@ public interface OrderRepository {
     Optional<Order> byId(String id);
 
     List<OrderItem> itemsByOrderId(String id);
+
+    List<Order> listOrdersWithPaging(int pageIndex, int pageSize);
+
 }
 

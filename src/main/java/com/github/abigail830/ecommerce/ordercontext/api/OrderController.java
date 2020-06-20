@@ -1,6 +1,7 @@
 package com.github.abigail830.ecommerce.ordercontext.api;
 
 import com.github.abigail830.ecommerce.ordercontext.application.OrderApplService;
+import com.github.abigail830.ecommerce.ordercontext.application.OrderSummaryApplService;
 import com.github.abigail830.ecommerce.ordercontext.application.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,20 +20,13 @@ public class OrderController {
     @Autowired
     OrderApplService orderApplService;
 
+    @Autowired
+    OrderSummaryApplService orderSummaryApplService;
+
     @PostMapping
     @ResponseStatus(CREATED)
     public Map<String, String> createOrder(@RequestBody @Valid CreateOrderRequest createOrderRequest) {
         return of("id", orderApplService.createOrder(createOrderRequest));
-    }
-
-    @GetMapping("/{id}")
-    public OrderResponse getOrderById(@PathVariable(name = "id") String id) {
-        return orderApplService.getOrderById(id);
-    }
-
-    @GetMapping("/{id}/items")
-    public List<OrderItemDTO> getOrderItemsByOrderId(@PathVariable(name = "id") String id) {
-        return orderApplService.getOrderItemsByOrderId(id);
     }
 
     @PostMapping("/{id}/items/{productId}")
@@ -54,14 +48,19 @@ public class OrderController {
         orderApplService.changeAddress(id, changeAddressDetailRequest);
     }
 
-//    @GetMapping("/{id}")
-//    public OrderRepresentation byId(@PathVariable(name = "id") String id) {
-//        return representationService.byId(id);
-//    }
-//
-//    @GetMapping
-//    public PagedResource<OrderSummaryRepresentation> pagedProducts(@RequestParam(required = false, defaultValue = "1") int pageIndex,
-//                                                                   @RequestParam(required = false, defaultValue = "10") int pageSize) {
-//        return representationService.listOrders(pageIndex, pageSize);
-//    }
+    @GetMapping
+    public List<OrderSummaryResponse> pagedOrderSummarys(@RequestParam(required = false, defaultValue = "1") int pageIndex,
+                                                         @RequestParam(required = false, defaultValue = "10") int pageSize) {
+        return orderSummaryApplService.listOrders(pageIndex, pageSize);
+    }
+
+    @GetMapping("/{id}")
+    public OrderResponse getOrderById(@PathVariable(name = "id") String id) {
+        return orderSummaryApplService.getOrderById(id);
+    }
+
+    @GetMapping("/{id}/items")
+    public List<OrderItemDTO> getOrderItemsByOrderId(@PathVariable(name = "id") String id) {
+        return orderSummaryApplService.getItemsByOrderId(id);
+    }
 }

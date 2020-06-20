@@ -37,4 +37,11 @@ public class BizException extends RuntimeException {
     public Map<String, Object> getData() {
         return data;
     }
+
+    public Map<String, Object> getErrorResponse() {
+        Map<String, Object> result = data;
+        result.put("errorCode", error.getCode());
+        result.put("errorMessage", error.getMessage());
+        return result;
+    }
 }

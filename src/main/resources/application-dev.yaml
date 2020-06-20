@@ -1,0 +1,11 @@
+swagger:
+    enable: true
+
+spring:
+    datasource:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://47.115.81.12:3306/testdb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true&serverTimezone=Asia/Shanghai
+        username: devtest
+        password: ENC(0rG1JrLm8KEdqloHeiI6hfYrm/k+BJu0)
+

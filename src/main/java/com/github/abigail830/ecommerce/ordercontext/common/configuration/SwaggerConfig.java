@@ -1,4 +1,4 @@
-package com.github.abigail830.ecommerce.ordercontext.configuration;
+package com.github.abigail830.ecommerce.ordercontext.common.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

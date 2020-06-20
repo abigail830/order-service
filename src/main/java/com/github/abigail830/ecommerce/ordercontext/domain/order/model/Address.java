@@ -24,8 +24,12 @@ public class Address {
         return new Address(province, city, detail);
     }
 
-    public Address changeDetailTo(String detail) {
-        return new Address(this.province, this.city, detail);
+//    public Address changeDetailTo(String detail) {
+//        return new Address(this.province, this.city, detail);
+//    }
+
+    public String combine() {
+        return province + "/" + city + "/" + detail;
     }
 
     @Override

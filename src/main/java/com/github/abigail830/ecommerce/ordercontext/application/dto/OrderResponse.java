@@ -22,7 +22,7 @@ public class OrderResponse {
     private List<OrderItemDTO> itemDTOs;
     private BigDecimal totalPrice;
     private String status;
-    private AddressDTO addressDTO;
+    private String address;
     private String createdAt;
 
     public static OrderResponse of(Order order) {
@@ -30,7 +30,7 @@ public class OrderResponse {
                 order.getItems().stream().map(OrderItemDTO::of).collect(Collectors.toList()),
                 order.getTotalPrice(),
                 order.getStatus().name(),
-                AddressDTO.of(order.getAddress()),
+                order.getAddress().combine(),
                 formatter.format(order.getCreatedAt()));
     }
 }

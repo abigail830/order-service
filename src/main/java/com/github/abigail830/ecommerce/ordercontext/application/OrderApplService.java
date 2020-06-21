@@ -1,40 +1,70 @@
 package com.github.abigail830.ecommerce.ordercontext.application;
 
-import com.github.abigail830.ecommerce.ordercontext.application.dto.*;
-import com.github.abigail830.ecommerce.ordercontext.domain.order.OrderPaymentService;
+import com.github.abigail830.ecommerce.ordercontext.application.dto.ChangeAddressDetailRequest;
+import com.github.abigail830.ecommerce.ordercontext.application.dto.CreateOrderRequest;
+import com.github.abigail830.ecommerce.ordercontext.application.dto.PayOrderRequest;
 import com.github.abigail830.ecommerce.ordercontext.domain.order.OrderRepository;
+import com.github.abigail830.ecommerce.ordercontext.domain.order.OrderService;
 import com.github.abigail830.ecommerce.ordercontext.domain.order.exception.OrderNotFoundException;
 import com.github.abigail830.ecommerce.ordercontext.domain.order.model.Order;
 import com.github.abigail830.ecommerce.ordercontext.domain.order.model.OrderFactory;
 import com.github.abigail830.ecommerce.ordercontext.domain.order.model.OrderItem;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
 public class OrderApplService {
 
-    @Autowired
     OrderRepository orderRepository;
 
-    @Autowired
     OrderFactory orderFactory;
 
+    private final ScheduledExecutorService scheduledExecutorService
+            = Executors.newScheduledThreadPool(1,
+            new ThreadFactoryBuilder().setNameFormat("order-auto-scan-thread-%d").build());
+    OrderService orderService;
+
     @Autowired
-    OrderPaymentService orderPaymentService;
+    public OrderApplService(OrderRepository orderRepository,
+                            OrderFactory orderFactory,
+                            OrderService orderService) {
+        this.orderRepository = orderRepository;
+        this.orderFactory = orderFactory;
+        this.orderService = orderService;
+        scheduledExecutorService.scheduleWithFixedDelay(this::scanExpiredOrder, 1, 2, TimeUnit.HOURS);
+    }
+
+    private void scanExpiredOrder() {
+
+    }
 
     @Transactional
     public String createOrder(CreateOrderRequest createOrderRequest) {
         List<OrderItem> items = createOrderRequest.toOrderItems();
         Order order = orderFactory.create(items, createOrderRequest.toAddress());
+        orderService.reduceInventoryForItems(order);
         orderRepository.save(order);
         log.info("Created order[{}].", order.getId());
         return order.getId();
+    }
+
+    @Transactional
+    public void pay(String id, PayOrderRequest payOrderRequest) {
+        Order order = orderRepository.byId(id)
+                .orElseThrow(() -> new OrderNotFoundException(id));
+        orderService.pay(order, payOrderRequest.getPaidPrice());
+        orderService.createDeliveryTicket(order);
+        orderRepository.save(order);
+        log.info("Order[{}] payed.", order.getId());
     }
 
     @Transactional
@@ -45,13 +75,6 @@ public class OrderApplService {
         orderRepository.save(order);
     }
 
-    @Transactional
-    public void pay(String id, PayOrderRequest payOrderRequest) {
-        Order order = orderRepository.byId(id)
-                .orElseThrow(() -> new OrderNotFoundException(id));
-        orderPaymentService.pay(order, payOrderRequest.getPaidPrice());
-        orderRepository.save(order);
-    }
 
     @Transactional
     public void changeAddress(String id, ChangeAddressDetailRequest changeAddressDetailRequest) {
@@ -61,22 +84,15 @@ public class OrderApplService {
         orderRepository.save(order);
     }
 
-    @Transactional
-    public List<OrderSummaryResponse> listOrders(int pageIndex, int pageSize) {
-        final List<Order> orders = orderRepository.listOrdersWithPaging(pageIndex, pageSize);
-        return orders.stream().map(OrderSummaryResponse::new).collect(Collectors.toList());
+    public void cancel(String id) {
+
     }
 
-    @Transactional
-    public List<OrderItemDTO> getItemsByOrderId(String id) {
-        return orderRepository.itemsByOrderId(id).stream()
-                .map(OrderItemDTO::of).collect(Collectors.toList());
+    public void signForReceive(String id) {
+
     }
 
-    @Transactional
-    public OrderResponse getOrderById(String id) {
-        final Order order = orderRepository.byId(id).orElseThrow(() -> new OrderNotFoundException(id));
-        return OrderResponse.of(order);
-    }
+    public void confirmForReceive(String id) {
 
+    }
 }

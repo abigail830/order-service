@@ -83,7 +83,6 @@ public class Order {
             throw new PaidPriceNotSameWithOrderPriceException(id);
         }
         this.status = PAID;
-
     }
 
     public void changeAddress(Address address) {

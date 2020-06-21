@@ -1,7 +1,6 @@
 package com.github.abigail830.ecommerce.ordercontext.api;
 
 import com.github.abigail830.ecommerce.ordercontext.application.OrderApplService;
-import com.github.abigail830.ecommerce.ordercontext.application.OrderSummaryApplService;
 import com.github.abigail830.ecommerce.ordercontext.application.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +18,6 @@ public class OrderController {
 
     @Autowired
     OrderApplService orderApplService;
-
-    @Autowired
-    OrderSummaryApplService orderSummaryApplService;
 
     @PostMapping
     @ResponseStatus(CREATED)
@@ -51,16 +47,16 @@ public class OrderController {
     @GetMapping
     public List<OrderSummaryResponse> pagedOrderSummarys(@RequestParam(required = false, defaultValue = "1") int pageIndex,
                                                          @RequestParam(required = false, defaultValue = "10") int pageSize) {
-        return orderSummaryApplService.listOrders(pageIndex, pageSize);
+        return orderApplService.listOrders(pageIndex, pageSize);
     }
 
     @GetMapping("/{id}")
     public OrderResponse getOrderById(@PathVariable(name = "id") String id) {
-        return orderSummaryApplService.getOrderById(id);
+        return orderApplService.getOrderById(id);
     }
 
     @GetMapping("/{id}/items")
     public List<OrderItemDTO> getOrderItemsByOrderId(@PathVariable(name = "id") String id) {
-        return orderSummaryApplService.getItemsByOrderId(id);
+        return orderApplService.getItemsByOrderId(id);
     }
 }

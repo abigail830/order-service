@@ -1,8 +1,6 @@
 package com.github.abigail830.ecommerce.ordercontext.application;
 
-import com.github.abigail830.ecommerce.ordercontext.application.dto.ChangeAddressDetailRequest;
-import com.github.abigail830.ecommerce.ordercontext.application.dto.CreateOrderRequest;
-import com.github.abigail830.ecommerce.ordercontext.application.dto.PayOrderRequest;
+import com.github.abigail830.ecommerce.ordercontext.application.dto.*;
 import com.github.abigail830.ecommerce.ordercontext.domain.order.OrderPaymentService;
 import com.github.abigail830.ecommerce.ordercontext.domain.order.OrderRepository;
 import com.github.abigail830.ecommerce.ordercontext.domain.order.exception.OrderNotFoundException;
@@ -15,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -60,6 +59,24 @@ public class OrderApplService {
                 .orElseThrow(() -> new OrderNotFoundException(id));
         order.changeAddress(changeAddressDetailRequest.toAddress());
         orderRepository.save(order);
+    }
+
+    @Transactional
+    public List<OrderSummaryResponse> listOrders(int pageIndex, int pageSize) {
+        final List<Order> orders = orderRepository.listOrdersWithPaging(pageIndex, pageSize);
+        return orders.stream().map(OrderSummaryResponse::new).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<OrderItemDTO> getItemsByOrderId(String id) {
+        return orderRepository.itemsByOrderId(id).stream()
+                .map(OrderItemDTO::of).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public OrderResponse getOrderById(String id) {
+        final Order order = orderRepository.byId(id).orElseThrow(() -> new OrderNotFoundException(id));
+        return OrderResponse.of(order);
     }
 
 }

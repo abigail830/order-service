@@ -92,28 +92,4 @@ public class Order {
         this.address = address;
     }
 
-//    public OrderRepresentation toRepresentation() {
-//        List<com.ecommerce.order.sdk.representation.order.OrderItem> itemRepresentations = this.getItems().stream()
-//                .map(orderItem -> new com.ecommerce.order.sdk.representation.order.OrderItem(orderItem.getProductId(),
-//                        orderItem.getCount(),
-//                        orderItem.getItemPrice()))
-//                .collect(Collectors.toList());
-//
-//        return new OrderRepresentation(this.getId(),
-//                itemRepresentations,
-//                this.getTotalPrice(),
-//                this.getStatus().name(),
-//                this.getAddress(),
-//                this.getCreatedAt());
-//    }
-//
-//
-//    public OrderSummaryRepresentation toSummary() {
-//        return new OrderSummaryRepresentation(this.getId(),
-//                this.getTotalPrice(),
-//                this.getStatus().name(),
-//                this.getCreatedAt(),
-//                this.getAddress());
-//    }
-
 }

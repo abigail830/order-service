@@ -64,7 +64,7 @@ public class OrderApplService {
         orderService.pay(order, payOrderRequest.getPaidPrice());
         orderService.createDeliveryTicket(order);
         orderRepository.save(order);
-        log.info("Order[{}] payed.", order.getId());
+        log.info("Order[{}] paid.", order.getId());
     }
 
     @Transactional
@@ -72,6 +72,13 @@ public class OrderApplService {
         Order order = orderRepository.byId(id)
                 .orElseThrow(() -> new OrderNotFoundException(id));
         order.changeProductCount(productId, count);
+        orderRepository.save(order);
+    }
+
+    public void cancel(String id) {
+        Order order = orderRepository.byId(id)
+                .orElseThrow(() -> new OrderNotFoundException(id));
+        order.cancel();
         orderRepository.save(order);
     }
 
@@ -84,15 +91,19 @@ public class OrderApplService {
         orderRepository.save(order);
     }
 
-    public void cancel(String id) {
 
-    }
 
     public void signForReceive(String id) {
-
+        Order order = orderRepository.byId(id)
+                .orElseThrow(() -> new OrderNotFoundException(id));
+        order.signForDelivered();
+        orderRepository.save(order);
     }
 
     public void confirmForReceive(String id) {
-
+        Order order = orderRepository.byId(id)
+                .orElseThrow(() -> new OrderNotFoundException(id));
+        order.confirmForReceive();
+        orderRepository.save(order);
     }
 }

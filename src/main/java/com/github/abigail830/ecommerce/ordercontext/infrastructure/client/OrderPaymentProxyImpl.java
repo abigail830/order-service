@@ -13,6 +13,6 @@ public class OrderPaymentProxyImpl implements OrderPaymentProxy {
     @Override
     public void pay(String orderId, BigDecimal paidPrice) {
         //TODO: 对接支付宝进行支付
-        log.info("Order[{}] payed with amount {}", orderId, paidPrice);
+        log.info("Order[{}] paid with amount {}", orderId, paidPrice);
     }
 }

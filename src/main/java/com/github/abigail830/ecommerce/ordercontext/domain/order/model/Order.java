@@ -2,6 +2,7 @@ package com.github.abigail830.ecommerce.ordercontext.domain.order.model;
 
 
 import com.github.abigail830.ecommerce.ordercontext.domain.order.exception.OrderCannotBeModifiedException;
+import com.github.abigail830.ecommerce.ordercontext.domain.order.exception.OrderStatusInvalidException;
 import com.github.abigail830.ecommerce.ordercontext.domain.order.exception.PaidPriceNotSameWithOrderPriceException;
 import com.github.abigail830.ecommerce.ordercontext.domain.order.exception.ProductNotInOrderException;
 import lombok.AccessLevel;
@@ -14,8 +15,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 
-import static com.github.abigail830.ecommerce.ordercontext.domain.order.model.OrderStatus.CREATED;
-import static com.github.abigail830.ecommerce.ordercontext.domain.order.model.OrderStatus.PAID;
+import static com.github.abigail830.ecommerce.ordercontext.domain.order.model.OrderStatus.*;
 import static java.math.BigDecimal.ZERO;
 import static java.time.Instant.now;
 
@@ -63,7 +63,7 @@ public class Order {
 
 
     public void changeProductCount(String productId, int count) {
-        if (this.status == PAID) {
+        if (this.status == PAID || this.status == DELIVER_SIGN || this.status == DELIVER_CONFIRM) {
             throw new OrderCannotBeModifiedException(this.id);
         }
         OrderItem orderItem = retrieveItem(productId);
@@ -92,4 +92,25 @@ public class Order {
         this.address = address;
     }
 
+    public void cancel() {
+        if (this.status == PAID || this.status == DELIVER_SIGN || this.status == DELIVER_CONFIRM) {
+            throw new OrderCannotBeModifiedException(this.id);
+        }
+        this.status = CANCELLED;
+    }
+
+    public void signForDelivered() {
+        if (this.status != PAID) {
+            throw new OrderStatusInvalidException(this.id);
+        }
+        this.status = DELIVER_SIGN;
+    }
+
+    public void confirmForReceive() {
+        if (this.status == DELIVER_SIGN || this.status == PAID) {
+            this.status = DELIVER_CONFIRM;
+        } else {
+            throw new OrderStatusInvalidException(this.id);
+        }
+    }
 }

@@ -1,9 +1,9 @@
 package com.github.abigail830.ecommerce.ordercontext.infrastructure.persistent;
 
-import com.github.abigail830.ecommerce.ordercontext.domain.order.OrderRepository;
-import com.github.abigail830.ecommerce.ordercontext.domain.order.model.Address;
-import com.github.abigail830.ecommerce.ordercontext.domain.order.model.Order;
-import com.github.abigail830.ecommerce.ordercontext.domain.order.model.OrderItem;
+import com.github.abigail830.ecommerce.ordercontext.application.OrderRepository;
+import com.github.abigail830.ecommerce.ordercontext.domain.order.Address;
+import com.github.abigail830.ecommerce.ordercontext.domain.order.Order;
+import com.github.abigail830.ecommerce.ordercontext.domain.order.OrderItem;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;

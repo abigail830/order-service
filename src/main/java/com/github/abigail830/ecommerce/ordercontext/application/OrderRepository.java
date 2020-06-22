@@ -1,7 +1,7 @@
-package com.github.abigail830.ecommerce.ordercontext.domain.order;
+package com.github.abigail830.ecommerce.ordercontext.application;
 
-import com.github.abigail830.ecommerce.ordercontext.domain.order.model.Order;
-import com.github.abigail830.ecommerce.ordercontext.domain.order.model.OrderItem;
+import com.github.abigail830.ecommerce.ordercontext.domain.order.Order;
+import com.github.abigail830.ecommerce.ordercontext.domain.order.OrderItem;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,6 +1,6 @@
 package com.github.abigail830.ecommerce.ordercontext.application.dto;
 
-import com.github.abigail830.ecommerce.ordercontext.domain.order.model.Order;
+import com.github.abigail830.ecommerce.ordercontext.domain.order.Order;
 import lombok.Value;
 
 import java.math.BigDecimal;

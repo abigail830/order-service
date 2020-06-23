@@ -19,4 +19,4 @@
 * domain - 领域模型与业务逻辑
 * infrastructure - 基础设施（技术实现）
 
-![分层架构](\layer_arch_gyb.jpg)
+![分层架构](/layer_arch_gyb.jpg)

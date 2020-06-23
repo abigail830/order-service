@@ -1,7 +1,7 @@
 package com.github.abigail830.ecommerce.ordercontext.application.dto;
 
-import com.github.abigail830.ecommerce.ordercontext.domain.order.Address;
-import com.github.abigail830.ecommerce.ordercontext.domain.order.OrderItem;
+import com.github.abigail830.ecommerce.ordercontext.domain.order.model.Address;
+import com.github.abigail830.ecommerce.ordercontext.domain.order.model.OrderItem;
 import lombok.Value;
 
 import javax.validation.Valid;

@@ -1,4 +1,4 @@
-package com.github.abigail830.ecommerce.ordercontext.domain.order;
+package com.github.abigail830.ecommerce.ordercontext.domain.order.model;
 
 import lombok.AccessLevel;
 import lombok.Getter;

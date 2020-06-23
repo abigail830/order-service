@@ -1,4 +1,4 @@
-package com.github.abigail830.ecommerce.ordercontext.domain.order;
+package com.github.abigail830.ecommerce.ordercontext.domain.order.model;
 
 
 import com.github.abigail830.ecommerce.ordercontext.domain.order.exception.OrderCannotBeModifiedException;
@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 
-import static com.github.abigail830.ecommerce.ordercontext.domain.order.OrderStatus.*;
+import static com.github.abigail830.ecommerce.ordercontext.domain.order.model.OrderStatus.*;
 import static java.math.BigDecimal.ZERO;
 import static java.time.Instant.now;
 

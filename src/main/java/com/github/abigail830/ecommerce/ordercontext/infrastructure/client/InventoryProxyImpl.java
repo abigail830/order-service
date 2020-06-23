@@ -1,7 +1,7 @@
 package com.github.abigail830.ecommerce.ordercontext.infrastructure.client;
 
 import com.github.abigail830.ecommerce.ordercontext.application.InventoryProxy;
-import com.github.abigail830.ecommerce.ordercontext.domain.order.OrderItem;
+import com.github.abigail830.ecommerce.ordercontext.domain.order.model.OrderItem;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

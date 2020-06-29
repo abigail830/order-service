@@ -8,7 +8,8 @@ public enum OrderErrorCode implements ErrorCode {
     ORDER_NOT_FOUND("没有找到订单"),
     PAID_PRICE_NOT_SAME_WITH_ORDER_PRICE("支付价格与订单实际价格不符"),
     PRODUCT_NOT_IN_ORDER("订单不包含产品"),
-    ORDER_STATUS_INVALID("订单状态不符");
+    ORDER_STATUS_INVALID("订单状态不符"),
+    EXCEED_MAX_ORDER_FOR_REPORT("订单数量超过最大能导出设置");
 
     private String message;
 

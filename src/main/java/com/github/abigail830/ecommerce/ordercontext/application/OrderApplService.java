@@ -1,8 +1,6 @@
 package com.github.abigail830.ecommerce.ordercontext.application;
 
-import com.github.abigail830.ecommerce.ordercontext.application.dto.ChangeAddressDetailRequest;
-import com.github.abigail830.ecommerce.ordercontext.application.dto.CreateOrderRequest;
-import com.github.abigail830.ecommerce.ordercontext.application.dto.PayOrderRequest;
+import com.github.abigail830.ecommerce.ordercontext.application.dto.*;
 import com.github.abigail830.ecommerce.ordercontext.domain.order.OrderRepository;
 import com.github.abigail830.ecommerce.ordercontext.domain.order.OrderService;
 import com.github.abigail830.ecommerce.ordercontext.domain.order.exception.OrderNotFoundException;
@@ -19,6 +17,7 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -91,6 +90,17 @@ public class OrderApplService {
         orderRepository.save(order);
     }
 
+    @Transactional
+    public List<OrderItemDTO> getItemsByOrderId(String id) {
+        return orderRepository.itemsByOrderId(id).stream()
+                .map(OrderItemDTO::of).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public OrderResponse getOrderById(String id) {
+        final Order order = orderRepository.byId(id).orElseThrow(() -> new OrderNotFoundException(id));
+        return OrderResponse.of(order);
+    }
 
 
     public void signForReceive(String id) {
